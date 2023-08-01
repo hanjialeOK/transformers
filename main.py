@@ -1,15 +1,19 @@
+import tensorflow as tf
 import tensorflow_datasets as tfds
 from tensorflow_datasets.core.utils import gcs_utils
-import tensorflow as tf
 
 import time
 import numpy as np
 import matplotlib.pyplot as plt
+import tensorflow as tf
 
 from transformer import Transformer, CustomSchedule
 from utils import create_masks
 
 if __name__ == '__main__':
+    gpus = tf.config.experimental.list_physical_devices('GPU')
+    for gpu in gpus:
+        tf.config.experimental.set_memory_growth(gpu, True)
     # ==========================================================输入流水线==========================================================
     gcs_utils._is_gcs_disabled = True
     examples, metadata = tfds.load('ted_hrlr_translate/pt_to_en', with_info=True,
@@ -17,10 +21,10 @@ if __name__ == '__main__':
     train_examples, val_examples = examples['train'], examples['validation']
 
     # 从训练数据集创建自定义子词分词器（subwords tokenizer）。
-    tokenizer_en = tfds.features.text.SubwordTextEncoder.build_from_corpus(
+    tokenizer_en = tfds.deprecated.text.SubwordTextEncoder.build_from_corpus(
         (en.numpy() for pt, en in train_examples), target_vocab_size=2**13)
 
-    tokenizer_pt = tfds.features.text.SubwordTextEncoder.build_from_corpus(
+    tokenizer_pt = tfds.deprecated.text.SubwordTextEncoder.build_from_corpus(
         (pt.numpy() for pt, en in train_examples), target_vocab_size=2**13)
 
     sample_string = 'Transformer is awesome.'
