@@ -11,7 +11,7 @@ class DecoderLayer(tf.keras.layers.Layer):
         self.mha1 = MultiHeadAttention(d_model, num_heads)
         self.mha2 = MultiHeadAttention(d_model, num_heads)
 
-        self.ffn = tf.keras.layers.Sequential([
+        self.ffn = tf.keras.Sequential([
             tf.keras.layers.Dense(dff, activation='relu'),  # (batch_size, seq_len, dff)
             tf.keras.layers.Dense(d_model)  # (batch_size, seq_len, d_model)
         ])
