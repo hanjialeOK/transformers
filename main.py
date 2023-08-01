@@ -1,4 +1,5 @@
 import tensorflow_datasets as tfds
+from tensorflow_datasets.core.utils import gcs_utils
 import tensorflow as tf
 
 import time
@@ -10,8 +11,9 @@ from utils import create_masks
 
 if __name__ == '__main__':
     # ==========================================================输入流水线==========================================================
+    gcs_utils._is_gcs_disabled = True
     examples, metadata = tfds.load('ted_hrlr_translate/pt_to_en', with_info=True,
-                                as_supervised=True)
+                                as_supervised=True, try_gcs=False)
     train_examples, val_examples = examples['train'], examples['validation']
 
     # 从训练数据集创建自定义子词分词器（subwords tokenizer）。
